@@ -12,8 +12,9 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Dodge")
 
 # Load background images
-BG = pygame.transform.scale(pygame.image.load("background-2.jpg"), (WIDTH, HEIGHT))
-STARTBG = pygame.transform.scale(pygame.image.load("image2.jpg"), (WIDTH, HEIGHT))
+bg_image = pygame.image.load("bg.png").convert_alpha()
+BG = pygame.transform.scale(pygame.image.load("sky.jpg"), (WIDTH, HEIGHT))
+STARTBG = pygame.transform.scale(pygame.image.load("bg.png"), (WIDTH, HEIGHT))
 
 # Player settings
 PLAYER_WIDTH = 80
