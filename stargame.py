@@ -37,6 +37,11 @@ player_image = pygame.transform.scale(player_image, (PLAYER_WIDTH, PLAYER_HEIGHT
 star_image = pygame.image.load("stone-removebg-preview.png")
 star_image = pygame.transform.scale(star_image, (STAR_WIDTH, STAR_HEIGHT))
 
+pygame.mixer.music.load('background_music.mp3')
+
+# Play the music indefinitely (-1 means loop indefinitely)
+pygame.mixer.music.play(-1)
+
 def draw(player, elapsed_time, stars):
     WIN.blit(BG, (0, 0))
 
