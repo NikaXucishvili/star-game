@@ -37,7 +37,8 @@ player_image = pygame.transform.scale(player_image, (PLAYER_WIDTH, PLAYER_HEIGHT
 star_image = pygame.image.load("stone-removebg-preview.png")
 star_image = pygame.transform.scale(star_image, (STAR_WIDTH, STAR_HEIGHT))
 
-pygame.mixer.music.load('background_music.mp3')
+pygame.mixer.init()
+pygame.mixer.music.load('music.mp3')
 
 # Play the music indefinitely (-1 means loop indefinitely)
 pygame.mixer.music.play(-1)
@@ -101,13 +102,29 @@ def start_screen():
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                run = False
-                break
+                countdown_timer()  # Start countdown on any key press
+                return
             elif event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-    pygame.time.delay(500)  # Add a slight delay before returning to main game
+        pygame.time.delay(30)
+
+def countdown_timer():
+    countdown_font = pygame.font.SysFont("comicsans", 100, bold=True)
+    countdown_texts = [countdown_font.render("Get Ready!", 1, (255, 255, 255)),
+                       countdown_font.render("3", 1, (255, 255, 255)),
+                       countdown_font.render("2", 1, (255, 255, 255)),
+                       countdown_font.render("1", 1, (255, 255, 255))]
+
+    countdown_rects = [text.get_rect(center=(WIDTH // 2, HEIGHT // 2)) for text in countdown_texts]
+
+    for i, text in enumerate(countdown_texts):
+        WIN.blit(STARTBG, (0, 0))  # Clear screen
+        WIN.blit(text, countdown_rects[i])
+        pygame.display.update()
+        if i < len(countdown_texts) - 1:
+            pygame.time.delay(1000)  # Wait 1 second between countdown steps
 
 def restart_game():
     global player, start_time, elapsed_time, stars, star_count, star_add_increment, hit
@@ -120,6 +137,8 @@ def restart_game():
     star_count = 0
     stars = []
     hit = False
+
+    pygame.mixer.music.play(-1)
 
 def main():
     start_screen()  # Show the start screen before starting the game
@@ -194,13 +213,13 @@ def main():
                 lost_text = FONT.render("You Lost! Press R to Restart or ESC to Quit", 1, (255, 255, 255))
                 WIN.blit(lost_text, (WIDTH/2 - lost_text.get_width()/2, HEIGHT/2 - lost_text.get_height()/2))
                 pygame.display.update()
-                pygame.time.delay(2000)  
+                pygame.time.delay(2000)
 
             if elapsed_time > 40:
                 win_text = FONT.render("You Won! Press R to Restart or ESC to Quit", 1, (255, 255, 255))
                 WIN.blit(win_text, (WIDTH/2 - win_text.get_width()/2, HEIGHT/2 - win_text.get_height()/2))
                 pygame.display.update()
-                pygame.time.delay(2000)  
+                pygame.time.delay(2000)
 
             draw(player, elapsed_time, stars)
 
