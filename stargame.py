@@ -12,7 +12,6 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Dodge")
 
 # Load background images
-bg_image = pygame.image.load("bg.png").convert_alpha()
 BG = pygame.transform.scale(pygame.image.load("sky.jpg"), (WIDTH, HEIGHT))
 STARTBG = pygame.transform.scale(pygame.image.load("bg.png"), (WIDTH, HEIGHT))
 
@@ -20,11 +19,6 @@ STARTBG = pygame.transform.scale(pygame.image.load("bg.png"), (WIDTH, HEIGHT))
 PLAYER_WIDTH = 80
 PLAYER_HEIGHT = 80
 PLAYER_VEL = 5
-
-# Star settings
-STAR_WIDTH = 70
-STAR_HEIGHT = 70
-STAR_VEL = 3
 
 # Font settings
 FONT = pygame.font.SysFont("comicsans", 30)
@@ -35,7 +29,6 @@ player_image = pygame.transform.scale(player_image, (PLAYER_WIDTH, PLAYER_HEIGHT
 
 # Load star image
 star_image = pygame.image.load("stone-removebg-preview.png")
-star_image = pygame.transform.scale(star_image, (STAR_WIDTH, STAR_HEIGHT))
 
 pygame.mixer.init()
 pygame.mixer.music.load('music.mp3')
@@ -52,7 +45,9 @@ def draw(player, elapsed_time, stars):
     WIN.blit(player_image, player.topleft)
 
     for star in stars:
-        WIN.blit(star_image, (star.x, star.y))  # Blit star image at star's position
+        star_width = star.width  # Get the width of the star
+        star_height = star.height  # Get the height of the star
+        WIN.blit(star_image, star, (0, 0, star_width, star_height))  # Blit star image at star's position
 
     pygame.display.update()
 
@@ -176,8 +171,10 @@ def main():
 
             if star_count > star_add_increment:
                 for _ in range(3):
-                    star_x = random.randint(0, WIDTH - STAR_WIDTH)
-                    star = pygame.Rect(star_x, -STAR_HEIGHT, STAR_WIDTH, STAR_HEIGHT)
+                    star_width = random.randint(50, 120)
+                    star_height = random.randint(50, 120)
+                    star_x = random.randint(0, WIDTH - star_width)
+                    star = pygame.Rect(star_x, -star_height, star_width, star_height)
                     stars.append(star)
 
                 star_add_increment = max(200, star_add_increment - 50)
@@ -200,7 +197,7 @@ def main():
                 player.y += PLAYER_VEL
 
             for star in stars[:]:
-                star.y += STAR_VEL
+                star.y += PLAYER_VEL
                 if star.y > HEIGHT:
                     stars.remove(star)
                 elif star.y + star.height >= player.y and star.colliderect(player):
